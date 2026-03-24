@@ -1,0 +1,22 @@
+---
+- name: Descargar imagen Docker
+  hosts: ubuntu
+  become: true
+
+  tasks:
+
+  - name: Instalar Docker
+    ansible.builtin.apt:
+      name: docker.io
+      state: present
+
+  - name: Descargar Tomcat
+    community.docker.docker_image:
+      name: tomcat
+      source: pull
+
+  - name: Etiquetar de nuevo el tomcat
+    community.docker.docker_image:
+      name: tomcat
+      repository: mi-tomcat
+      source: local

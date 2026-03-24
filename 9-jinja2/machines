@@ -1,0 +1,9 @@
+[ubuntu]
+worker1
+worker2
+
+[ubuntu:vars]
+puerto=80
+
+[centos]
+rocky2

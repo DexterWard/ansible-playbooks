@@ -1,0 +1,24 @@
+---
+
+- name: Trabajar con Volumenes Logicos
+  hosts: rocky2
+  become: true
+
+  tasks:
+
+  - name: Crear una particion en el disco sdc
+    community.general.parted:
+      device: /dev/sdc
+      number: 1
+      part_end: 5GiB
+      state: present
+
+  - name: Ver el disco
+    community.general.parted:
+      device: /dev/sdc
+      state: info
+    register: datos
+
+  - name: Visualizar resultado
+    debug:
+      var: datos

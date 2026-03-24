@@ -1,0 +1,22 @@
+---
+- name: Instalar software segun OS
+  hosts: all
+  become: true
+  vars_files:
+    - software-ubuntu.yaml
+    - software-rocky.yaml
+
+  tasks:
+  - name: Instalar software Ubuntu
+    ansible.builtin.apt:
+      name: "{{item}}"
+      state: present
+    loop: "{{software_ubuntu}}"
+    when: ansible_facts.distribution == 'Ubuntu'
+
+  - name: Instalar software Rocky
+    ansible.builtin.yum:
+      name: "{{item}}"
+      state: present
+    loop: "{{software_rocky}}"
+    when: ansible_facts.distribution == 'Rocky'

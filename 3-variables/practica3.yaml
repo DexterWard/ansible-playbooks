@@ -1,0 +1,29 @@
+---
+- name: Practica con variables registradas
+  hosts: rocky2
+  become: true
+
+  tasks:
+  - name: Instalar mysql
+    yum: 
+      name: mysql8.4-server.x86_64
+      state: present
+    register: instalar_mysql
+
+  - name: Visualizar instalacion mysql
+    ansible.builtin.debug:
+      var: instalar_mysql
+
+  - name: Arrancar mysql
+    service:
+      name: mysqld
+      state: started
+    register: arrancar_mysql
+
+  - name: Visualizar arranque mysql
+    debug:
+      var: arrancar_mysql
+
+  - name: Ver memoria mysql
+    debug:
+      msg: "El valor de la memoria usada por mysql es: {{arrancar_mysql.status.MemoryCurrent}}"

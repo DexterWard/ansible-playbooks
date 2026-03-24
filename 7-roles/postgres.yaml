@@ -1,0 +1,15 @@
+#### PLAY PARA CREAR UN SERVIDOR POSTGRES
+---
+- name: Configuración de servidor de base de datos PostgreSQL
+  hosts:  ubuntu
+  become: true
+
+  roles:
+    - desarrollo
+
+  tasks:
+
+  - name: Ultima tarea
+    ansible.builtin.debug:
+      msg: "Finalizado"
+

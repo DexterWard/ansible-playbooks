@@ -1,0 +1,13 @@
+---
+- name: Probar Vault creando directorios home
+  hosts: worker1
+  become: true
+  vars_files: usuarios_encriptados.yaml
+
+  tasks:
+  - name: Crear directorios
+    ansible.builtin.file:
+      path: /home/{{item}}
+      state: directory
+    loop: "{{usuarios}}"
+

@@ -1,0 +1,23 @@
+---
+- name: Crear red virtual
+  hosts: ubuntu
+  become: true
+
+  tasks:
+
+  - name: Crear una red de Docker
+    community.docker.docker_network:
+      name: red1
+      ipam_config:
+        - subnet: 172.18.0.0/16
+          gateway: 172.18.2.1
+
+  - name: Asociar un contenedor a la red
+    community.docker.docker_container:
+      name: nginx1
+      image: nginx
+      ports:
+        - 9090:80
+      networks:
+        - name: red1
+      detach: true

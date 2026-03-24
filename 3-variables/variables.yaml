@@ -1,0 +1,10 @@
+---
+- name: Prueba con Variables
+  hosts: ubuntu
+  vars:
+    - mensaje: "Esto es un mensaje de Ansible"
+
+  tasks:
+  - name: Ver Variables
+    debug:
+      msg: "{{mensaje}}"

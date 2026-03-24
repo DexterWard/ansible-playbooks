@@ -1,0 +1,43 @@
+---
+- name: Practica de tagss
+  hosts: all
+  become: true
+  
+  tasks:
+  - name: Instalar Apache Ubuntu
+    ansible.builtin.apt:
+      name: apache2
+      state: present
+    when: ansible_facts['distribution']=="Ubuntu"
+    tags:
+      - Ubuntu
+
+  - name: Instalar Apache Rocky
+    ansible.builtin.yum:
+      name: httpd
+      state: present
+    when: ansible_facts['distribution']=="Rocky"
+    tags:
+      - Rocky
+
+  - name: Copiar web
+    ansible.builtin.template:
+      src: condicionales.j2
+      dest: /var/www/html/index.html
+
+  - name: Arrancar Apache Ubuntu
+    service:
+      name: apache2
+      state: started
+    when: ansible_facts['distribution']=="Ubuntu"
+    tags:
+      - Ubuntu
+
+  - name: Arrancar Apache Rocky
+    service:
+      name: httpd
+      state: started
+    when: ansible_facts['distribution']=="Rocky"
+    tags:
+      - Rocky
+  

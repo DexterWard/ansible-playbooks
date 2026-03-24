@@ -1,0 +1,14 @@
+---
+- name: Bucles
+  hosts: worker1
+  become: true
+
+  tasks:
+  - name: Crear grupos
+    ansible.builtin.group:
+      name: "{{item}}"
+      state: present
+    loop:
+      - grupo1
+      - grupo2
+      - grupo3

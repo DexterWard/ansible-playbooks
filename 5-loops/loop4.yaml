@@ -1,0 +1,21 @@
+---
+- name: Otras pruebas con LOOP
+  hosts: worker1
+
+  tasks:
+  - name: Ver maquinas inventario
+    ansible.builtin.debug:
+      msg: "{{item}}"
+    loop: "{{groups['all']}}"
+    register: resultado
+
+  - name: Copiar el resultado en worker1
+    ansible.builtin.copy:
+      content: "{{resultado}}"
+      dest: /tmp/resultado.txt
+
+  - name: Recuperar fichero
+    ansible.builtin.fetch:
+      src: /tmp/resultado.txt
+      dest: /tmp/resultado.txt
+      flat: true

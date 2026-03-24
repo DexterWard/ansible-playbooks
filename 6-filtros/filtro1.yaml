@@ -1,0 +1,26 @@
+---
+
+- name: Diccionario a lista
+  hosts: worker1
+  vars:
+        entorno:
+          Proyecto: desarrollo
+          Responsable: Pedro
+          Personas: 10
+          Sistema: Linux
+
+  tasks:
+    - name: Diccionario
+      ansible.builtin.debug:
+        var:  entorno | dict2items 
+
+    - name: Pintar la lista
+      ansible.builtin.debug:
+        msg: "{{item.value}}"
+      loop: "{{entorno | dict2items}}"
+
+    - name: Leer un fichero con with_lines
+      ansible.builtin.debug:
+        msg: "{{item | split(':')}}"
+      with_lines: cat /etc/passwd
+

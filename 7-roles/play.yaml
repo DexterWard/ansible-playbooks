@@ -1,0 +1,12 @@
+---
+- name: Ejemplos de un rol
+  hosts: ubuntu
+  become: true
+  roles:
+    - mariadb
+
+  tasks:
+
+  - name: Ultima tarea
+    ansible.builtin.debug:
+      msg: "Primero se ejecutan las tareas del rol"

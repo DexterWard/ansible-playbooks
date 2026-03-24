@@ -1,0 +1,6 @@
+[ubuntu]
+worker1
+worker2
+
+[centos]
+rocky2

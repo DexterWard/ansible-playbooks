@@ -1,0 +1,50 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for desarrollo
+- name: Instalar PostgreSQL
+  ansible.builtin.apt:
+        name: "{{software}}"
+        state: latest
+
+- name: Crear el directorio para la base de datos
+  ansible.builtin.file:
+        path: "{{path}}"
+        state: directory
+
+- name: Dar permisos de usuario y grupo al directorio
+  ansible.builtin.file:
+        path: "{{path}}"
+        owner: postgres
+        group: postgres
+        state: directory
+
+- name: Install ACL support
+  become: yes
+  apt: name=acl state=present  # Debian/Ubuntu   
+
+- name: Inicializar la base de datos de PostgreSQL en el directorio creado anteriormente
+  become: true
+  become_user: postgres
+  command: /usr/lib/{{software}}/16/bin/initdb -D {{path}}
+
+- name: Habilitar PostgreSQL en el arranque del sistema
+  service:
+        name: "{{software}}"
+        enabled: true
+        state: started
+
+- name: Copiar script para crear usuario y BBDD
+  copy:
+        src: files/crear_bd_usu_sql
+        dest: "{{script}}"
+        owner: postgres
+        group: postgres
+        mode: '0744'
+
+- name: Lanzar script para crear un usuario y una base de datos
+  become: true
+  become_user: postgres
+  ansible.builtin.shell:
+    cmd: "{{script}}"
+  notify: reiniciar
+

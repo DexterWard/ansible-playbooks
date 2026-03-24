@@ -1,0 +1,12 @@
+---
+- name: Bucle crear usuarios
+  hosts: worker1
+  become: true
+  vars_files: usuarios
+
+  tasks:
+  - name: Crear usuarios
+    ansible.builtin.user:
+      name: "{{item}}"
+      state: present
+    loop: "{{usuarios}}"

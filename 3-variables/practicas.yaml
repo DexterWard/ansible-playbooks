@@ -1,0 +1,19 @@
+---
+
+- name: Prueba con variables
+  hosts: worker1
+  become: true
+  vars:
+      mensaje: 
+         empresa: Apasoft Training
+         curso: ansible
+         nivel: alto
+         responsables:
+           - Pedro
+           - Raul
+           - Rosa
+  tasks:
+  - name: Mensaje de bienvenida
+    copy:
+      content: "{{mensaje.responsables}} y segundo responsable {{mensaje.responsables[1]}}"
+      dest: /etc/motd

@@ -1,0 +1,11 @@
+<h1> LISTA DE PRODUCTOS </h1>
+<h2> Estos son los productios de la tienda </h2>
+<ol>
+  {% for producto in productos %}
+    <li> {{producto | upper }} </li>
+  {% endfor %}
+
+  <li> {{productos | join(' ' | upper) }} </li>
+
+  <li> {{ 4.35 * 10 | abs  }} </li>
+</ol>  

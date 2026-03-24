@@ -1,0 +1,10 @@
+---
+
+- name: Dia de la semana
+  hosts: worker1
+
+  tasks:
+    - name: Recuperar dia de la semana en mayusculas
+      ansible.builtin.debug:
+        msg: "{{ansible_date_time.weekday | upper}}"
+

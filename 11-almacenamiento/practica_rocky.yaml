@@ -1,0 +1,145 @@
+---
+
+- name: Practica Rocky
+  hosts: rocky2
+  become: true
+
+  tasks:
+
+  - name: Crear una particion en cada disco
+    community.general.parted:
+      device: "{{item}}"
+      number: 2
+      part_start: 5GiB
+      part_end: 9GiB
+      state: present
+    loop:
+      - /dev/sdb
+      - /dev/sdc
+    tags:
+      - particion
+
+  - name: Ver el disco
+    community.general.parted:
+      device: "{{item}}"
+      state: info
+    register: datos
+    loop:
+      - /dev/sdb
+      - /dev/sdc
+    tags:
+      - particion
+
+
+  - name: Visualizar particiones
+    debug:
+      var: datos
+    tags:
+      - particion
+
+  - name: Crear un grupo de volumenes
+    community.general.lvg:
+      vg: grupo2
+      pvs:
+        - /dev/sdb2
+        - /dev/sdc2
+    tags:
+      - volume_group
+
+  - name: Recuperar informacion de los vg
+    ansible.builtin.shell:
+      cmd: 'vgdisplay | grep "VG Name"'
+    register: vg
+    tags:
+      - volume_group
+
+  - name: Ver grupo de volumenes
+    debug:
+      var: vg
+    tags:
+      - volume_group
+
+
+  - name: Crear volumen logico lvol1 en el grupo2
+    community.general.lvol:
+      vg: grupo2
+      lv: lvol1
+      size: 512
+    tags:
+      - logical_volume
+
+  - name: Crear volumen logico lvol2 en el grupo2
+    community.general.lvol:
+      vg: grupo2
+      lv: lvol2
+      size: 512
+    tags:
+      - logical_volume
+
+  - name: Recuperar volumenes logicos
+    ansible.builtin.shell:
+      cmd: 'lvdisplay | grep "LV Name"'
+    register: lv
+    tags:
+      - logical_volume
+
+  - name: Visualizar volumenes logicos
+    debug:
+      var: lv
+    tags:
+      - logical_volume
+
+  - name: Crear sistema de ficheros en cada lv
+    community.general.filesystem:
+      dev: "{{item}}"
+      fstype: ext4
+      state: present
+    loop:
+      - /dev/grupo2/lvol1
+      - /dev/grupo2/lvol2
+    tags:
+      - mount
+
+
+  - name: Crear puntos de montaje
+    ansible.builtin.file:
+      path: "{{item}}"
+      state: directory
+    loop:
+      - /imagenes
+      - /videos
+    tags:
+      - mount
+
+  - name: Montar sistema de ficheros para lvol1
+    ansible.posix.mount:
+      path: /imagenes
+      src: /dev/grupo2/lvol1
+      fstype: ext4
+      state: mounted
+    tags:
+      - mount
+
+  - name: Montar sistema de ficheros para lvol2
+    ansible.posix.mount:
+      path: /videos
+      src: /dev/grupo2/lvol2
+      fstype: ext4
+      state: mounted
+    tags:
+      - mount
+
+  - name: Comprobar sistema de ficheros
+    ansible.builtin.shell:
+      cmd: df -h | grep lvol
+    register: ficheros
+    tags:
+      - mounts
+
+  - name: Visualizar sistema de ficheros
+    ansible.builtin.debug:
+      var: ficheros
+    tags:
+      - mounts
+
+ 

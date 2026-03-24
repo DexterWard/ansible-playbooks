@@ -1,0 +1,19 @@
+---
+
+- name: Montar un sistema de ficheros
+  hosts: worker1
+  become: true
+
+  tasks:
+
+  - name: Crear un punto de montaje
+    ansible.builtin.file:
+      path: /datos
+      state: directory
+
+  - name: Montar sistema de ficheros
+    ansible.posix.mount:
+      path: /datos
+      src: /dev/sdb1
+      fstype: ext4
+      state: mounted

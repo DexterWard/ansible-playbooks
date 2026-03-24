@@ -1,0 +1,19 @@
+---
+- name: Trabajar con JINJA2. Montar APACHE
+  hosts:
+    - worker1
+  become: true
+  vars:
+    software: nginx
+    version: 
+  tasks:
+
+  - name: Instalar {{software}}
+    ansible.builtin.apt:
+      name: "{{software}}"
+      state: present
+
+  - name: copiar resultado
+    ansible.builtin.template:
+      src: operadores.j2
+      dest: /tmp/resultado.txt

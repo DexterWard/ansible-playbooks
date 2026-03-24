@@ -1,0 +1,28 @@
+---
+
+- name: Diccionario a lista
+  hosts: worker1
+  vars:
+    lista1: [ 2,4,8,9,4,15,20]
+    lista2: [2,9,25,34,2]
+
+  tasks:
+    - name: Unique
+      ansible.builtin.debug:
+        var: lista1 | unique
+
+    - name: Unique2
+      ansible.builtin.debug:
+        var: lista2 | unique
+
+    - name: Union
+      ansible.builtin.debug:
+        var: lista1|union(lista2)
+
+    - name: Interseccion
+      ansible.builtin.debug:
+        var: lista1|intersect(lista2)
+
+    - name: Diferencia
+      ansible.builtin.debug:
+        var: lista1|difference(lista2)

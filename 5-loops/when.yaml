@@ -1,0 +1,15 @@
+---
+- name: Prueba con WHEN, visualizar fecha en los ubuntu
+  hosts: all
+
+  tasks:
+  - name: Capturar fecha
+    shell:
+      cmd: date
+    register: fecha
+    when: ansible_distribution=='Ubuntu'
+
+  - name: Visualizar fecha
+    ansible.builtin.debug:
+      msg: "{{fecha.stdout}}"
+    when: ansible_distribution=='Ubuntu'

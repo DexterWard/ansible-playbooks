@@ -1,0 +1,8 @@
+---
+- name: Prueba con variables linea de comandos
+  hosts: worker2
+
+  tasks:
+  - name: Variables de linea de comandos
+    debug:
+      msg: "Te voy a decir una cosa: {{mensaje}}"

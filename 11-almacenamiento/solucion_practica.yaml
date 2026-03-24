@@ -1,0 +1,71 @@
+---
+- name: Practica apartado 17
+  hosts: rocky2
+  vars:
+    discos:
+      - /dev/sdb
+      - /dev/sdc
+    particiones:
+      - /dev/sdb2
+      - /dev/sdc2
+    vg: grupo2
+    lv:
+      - lvol1
+      - lvol2
+    filesystem: ext4
+    folders:
+      - /imagenes
+      - /videos
+
+tasks:
+  - name: Agregar partición a cada disco
+    tags: add_partition
+    loop: "{{discos}}"
+    community.general.parted:
+      device: "{{item}}"
+      number: 2
+      part_start: 5GiB
+      part_end: 9GiB
+      state: present
+
+  - name: Crear un VG
+    tags: add_vg
+    community.general.lvg:
+      vg: "{{vg}}"
+      pvs: "{{particiones}}"
+
+  - name: Crear un LV
+    tags: add_lv
+    loop: "{{lv}}"
+    community.general.lvol:
+      vg: "{{vg}}"
+      lv: "{{item}}"
+      size: 4000
+
+  - name: Crear el File System
+    tags: create_fs
+    loop:
+      - /dev/{{vg}}/{{lv[0]}}
+      - /dev/{{vg}}/{{lv[1]}}
+    community.general.filesystem:
+      dev: "{{item}}"
+      fstype: "{{filesystem}}"
+      state: present
+
+  - name: Crear los directorios
+    tags: create_folders
+    loop: "{{folders}}"
+    ansible.builtin.file:
+      path: "{{item}}"
+      state: directory
+
+  - name: Montar el sistema de ficheros
+    tags: mount_fs
+    loop:
+      - /dev/{{vg}}/{{lv[0]}}:{{folders[0]}}
+      - /dev/{{vg}}/{{lv[1]}}:{{folders[1]}}
+    ansible.posix.mount:
+      src: "{{item | split(':') | first}}"
+      path: "{{item | split(':') | last}}"
+      fstype: "{{filesystem}}"
+      state: mounted

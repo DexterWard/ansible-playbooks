@@ -1,0 +1,10 @@
+---
+
+- name: IP
+  hosts: worker1
+
+  tasks:
+    - name: IP
+      ansible.builtin.debug:
+        msg: "{{ansible_all_ipv4_addresses[0] | split('.')  }}"
+

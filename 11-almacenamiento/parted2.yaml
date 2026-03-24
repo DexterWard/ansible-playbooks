@@ -1,0 +1,27 @@
+---
+
+- name: Trabajar con el módulo parted
+  hosts: worker1
+  become: true
+
+  tasks:
+
+  - name: Crear particion de 5 Gigas
+    community.general.parted:
+      device: /dev/sdb
+      number: 1
+      part_end: 5GiB
+      state: present
+
+
+  - name: Ver informacion de sdb
+    community.general.parted:
+      device: /dev/sdb
+      state: info
+
+    register: datos
+
+  - name: Ver los datos
+    debug:
+      var: datos
+

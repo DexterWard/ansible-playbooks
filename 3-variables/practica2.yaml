@@ -1,0 +1,20 @@
+---
+- name: Variables FACT
+  hosts: ubuntu rocky2
+
+  tasks:
+  - name: Ver variables FACT
+    debug:
+      msg: "La memoria libre es {{ansible_facts['memfree_mb']}}"
+
+  - name: Ver gateway
+    debug:
+      msg: "El gateway de la maquina es: {{ansible_facts.default_ipv4.gateway}}"
+
+  - name: Ver procesador
+    debug:
+      msg: "El procesador es: {{ansible_facts.processor[2]}}"
+
+  - name: Ver memoria
+    debug:
+      msg: "La memoria es: {{ansible_facts.memory_mb}}"

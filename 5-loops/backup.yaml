@@ -1,0 +1,31 @@
+---
+- name: Ejemplo de handler
+  hosts: worker2
+
+  tasks:
+
+  - name: Copiar el programa de backup al destino
+    ansible.builtin.copy:
+      src: backup.sh
+      dest: /tmp/backup.sh
+      mode: '0744'
+
+  - name: Lanzar el programa de backup
+    ansible.builtin.shell: nohup /tmp/backup.sh </dev/null >/dev/null 2>&1 &
+    notify:
+      - copiar_backup
+
+  - name: Comprobar finalizacion
+    ansible.builtin.shell:
+      cmd: cat /tmp/backup.terminado
+    register: result
+    until: result.stdout=="Fin de backup"
+    retries: 15
+    delay: 15
+
+  handlers:
+  - name: copiar_backup
+    ansible.builtin.fetch:
+      src: /tmp/copia.tar
+      dest: /tmp/
+

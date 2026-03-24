@@ -1,0 +1,14 @@
+---
+- name: Otras pruebas con LOOP
+  hosts: worker1
+
+  tasks:
+  - name: Diccionarios
+    vars:
+      entorno:
+        nombre: desarrollo
+        responsable: Pikacho
+        personas: 10
+    ansible.builtin.debug:
+      msg: "{{item.key}} {{item.value}}"
+    loop: "{{entorno | dict2items}}"

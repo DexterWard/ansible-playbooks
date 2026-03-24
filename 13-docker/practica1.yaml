@@ -1,0 +1,40 @@
+---
+- name: Exponer Apache
+  hosts: worker2
+  become: true
+
+  tasks:
+
+  - name: Copiar a datos la pagina web
+    ansible.builtin.copy:
+      src: espacio.zip
+      dest: /datos
+
+  - name: Cambiar permisos
+    ansible.builtin.file:
+      path: "/datos"
+      owner: www-data
+      group: www-data
+      mode: '0777'
+
+
+  - name: Instalar unzip
+    ansible.builtin.apt:
+      name: unzip
+      state: present
+
+  - name: Descomprimir la web
+    ansible.builtin.shell:
+      cmd: cd /datos && unzip espacio.zip
+
+  - name: Crear contenedor Apache
+    community.docker.docker_container:
+      name: apache1
+      image: httpd
+      ports:
+        - 7070:80
+      detach: true
+      volumes:
+        - "/datos:/usr/local/apache2/htdocs"
+
+ 

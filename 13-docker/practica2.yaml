@@ -1,0 +1,43 @@
+---
+- name: Crear Wordpress
+  hosts: worker1
+  become: true
+
+  tasks:
+
+  - name: Crear red virtual
+    community.docker.docker_network:
+      name: red2
+      ipam_config:
+        - subnet: 172.19.0.0/16
+          gateway: 172.19.2.1
+
+  - name: Asociar el contenedor mariadb a la red
+    community.docker.docker_container:
+      name: mariadb2
+      image: mariadb
+      networks:
+        - name: red2
+      detach: true
+      env:
+        MARIADB_ROOT_PASSWORD: "lepanto"
+        MARIADB_DATABASE: "db1"
+        MARIADB_USER: "usu1"
+        MARIADB_PASSWORD: "lepanto"
+
+
+  - name: Asociar el contenedor wordpress a la red
+    community.docker.docker_container:
+      name: wordpress
+      image: wordpress
+      ports:
+        - 9091:80
+      networks:
+        - name: red2
+      detach: true
+      env:
+        WORDPRESS_DB_HOST: "mariadb2"
+        WORDPRESS_DB_USER: "usu1"
+        WORDPRESS_DB_PASSWORD: "lepanto"
+        WORDPRESS_DB_NAME: "db1"
+

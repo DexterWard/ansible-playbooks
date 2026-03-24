@@ -1,0 +1,17 @@
+---
+- name: Trabar con JINJA2. Montar APACHE
+  hosts:
+    - worker2
+  become: true
+  vars:
+    productos:
+      - pera
+      - manzana
+      - fresa
+      - kiwi
+  tasks:
+
+    - name: copiar resultado
+      ansible.builtin.template:
+        src: filtros.j2
+        dest: /var/www/html/index.html

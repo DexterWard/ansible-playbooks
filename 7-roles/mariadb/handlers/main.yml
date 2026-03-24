@@ -1,0 +1,11 @@
+#SPDX-License-Identifier: MIT-0
+---
+# handlers file for mariadb
+- name: copiar_script_sql
+  ansible.builtin.copy:
+    src: files/crear_db.sql
+    dest: /tmp/crear_db.sql
+
+- name: crear_bd
+  ansible.builtin.shell:
+    cmd: mysql < /tmp/crear_db.sql

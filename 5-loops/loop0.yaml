@@ -1,0 +1,12 @@
+---
+- name: Bucles
+  hosts: worker1
+
+  tasks:
+  - name: Visualizar
+    ansible.builtin.debug:
+      msg: "{{item}}"
+    loop:
+      - valor1
+      - valor2
+      - valor3

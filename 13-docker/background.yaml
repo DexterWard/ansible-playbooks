@@ -1,0 +1,13 @@
+---
+- name: Descargar imagen Docker
+  hosts: ubuntu
+  become: true
+
+  tasks:
+
+  - name: Crear un contenedor en modo background
+    community.docker.docker_container:
+      name: contenedor_tomcat
+      image: mi-tomcat
+      state: started
+      detach: true

@@ -1,0 +1,9 @@
+[ubuntu]
+worker1 v2="Esto es una variable de inventario"
+worker2
+
+[ubuntu:vars]
+puerto=80
+
+[centos]
+rocky2

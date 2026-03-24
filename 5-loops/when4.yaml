@@ -1,0 +1,24 @@
+---
+- name: Prueba con WHEN, crear un fichero en un directorio si está vacío
+  hosts: all
+
+  vars:
+    - path: /tmp/prueba
+
+  tasks:
+
+  - name: Crear directorio
+    ansible.builtin.file:
+      path: {{"path"}}
+      state: directory
+
+  - name: Ver si el directorio está vacío
+    ansible.builtin.command:
+      cmd: ls {{"path"}}
+    register: resultado
+
+  - name: Crear el fichero si no existe nada en el directorio
+    ansible.builtin.file:
+      path: {{"path"}}/prueba
+      state: touch
+    when: resultado.stdout==""

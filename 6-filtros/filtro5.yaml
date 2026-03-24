@@ -1,0 +1,24 @@
+---
+
+- name: Instalar
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Recuperar octeto
+      ansible.builtin.debug:
+        msg: "{{ansible_all_ipv4_addresses[0] | split('.')  }}"
+      register: octeto
+
+    - name: Comprobar
+      ansible.builtin.debug:
+        msg: "{{octeto.msg[3]}}"
+      register: ip
+
+    - name: Instalar
+      ansible.builtin.apt:
+          name: php
+          state: present
+      when: ansible_facts['distribution']=='Ubuntu' and ip.msg | int > 6
+
+

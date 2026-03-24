@@ -1,0 +1,51 @@
+---
+# Instalar LAMP
+# 1- Instalar Apache
+# 2- Arrancar Apache
+# 3- Instalar mariadb
+# 4- Instalar php, php-mysql y libapache2-mod-php
+# 5- Copiar phpinfo.php en /var/www/html/
+
+- name: Instalar LAMP
+  hosts: worker1
+  become: true
+
+    
+  tasks:
+     
+    - name: Actualizar repositorios
+      apt:
+        update_cache: yes
+
+    - name: Instalar Apache
+      apt:
+        name: apache2
+        state: present
+ 
+    - name: Instalar mariadb
+      apt:
+        name: mariadb-server
+        state: present
+ 
+    - name: Instalar php y librerias
+      apt:
+        name: 
+          - php
+          - php-mysql
+          - libapache2-mod-php
+        state: present
+
+    - name: Crear phpinfo.php
+      copy: 
+        content: |-
+          <?php
+             phpinfo();
+          ?>
+        dest: /var/www/html/phpinfo.php
+        mode: 0755
+
+    - name: Arrancar Apache
+      service:
+        name: apache2
+        state: started
+        

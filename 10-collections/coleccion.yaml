@@ -1,0 +1,16 @@
+---
+- name: Probar coleccion
+  hosts: ubuntu
+
+  collections:
+    - steady.c1
+
+  tasks:
+  - name: Llamar al modulo
+    steady.c1.modulo:
+      texto: voy a probar mi coleccion
+    register: v1
+
+  - name: Visualizar la salida
+    ansible.builtin.debug:
+      msg: "{{v1}}"

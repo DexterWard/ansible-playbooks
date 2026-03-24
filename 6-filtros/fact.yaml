@@ -1,0 +1,9 @@
+---
+- name: Prueba con variables FACT
+  hosts: all
+
+  tasks:
+  - name: Ver variables FACT
+    debug:
+      msg: "Variables fact: {{ansible_facts | dict2items }}"
+

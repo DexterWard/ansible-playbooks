@@ -1,0 +1,10 @@
+---
+- name: Instalar apache
+  hosts: worker2
+  become: true
+
+  tasks:
+  - name: Realizar la instalacion
+    apt:
+      name: "{{software}}"
+      state: present
